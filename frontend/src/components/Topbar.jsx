@@ -1,10 +1,37 @@
-import React from "react";
-import {  SearchIcon } from "@heroicons/react/outline";
+// src/components/Topbar.jsx
+import React, { useState } from "react";
+import { SearchIcon } from "@heroicons/react/outline";
 import { Typography } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function Topbar() {
+export default function Topbar({ onLogout }) {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      // Call your backend logout endpoint, sending cookies
+      await axios.post(
+        "http://localhost:8000/api/v1/admin/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      // Tell App to flip isAuthenticated → false
+      onLogout();
+
+      // Navigate back to login
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setError("Could not log out. Please try again.");
+    }
+  };
+
   return (
-    <div className="flex items-center justify-between bg-white shadow px-4 py-2">
+    <div className="flex items-center justify-between bg-white shadow px-4 py-5">
       {/* Left: Search */}
       <div className="flex items-center space-x-2">
         <SearchIcon className="h-5 w-5 text-gray-500" />
@@ -15,14 +42,26 @@ function Topbar() {
         />
       </div>
 
-      {/* Right: Icons / Profile */}
-      <div className="flex items-center space-x-4 p-4">
-      <Typography variant="h6" color="blue-gray" className="-mb-3">
-              Login
+      {/* Right: Logout */}
+      <div className="flex items-center space-x-4">
+        <Typography variant="h6" color="blue-gray" className="-mb-3">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a
+            href="#"
+            onClick={handleLogout}
+            className="text-blue-500 hover:underline"
+          >
+            Logout
+          </a>
         </Typography>
       </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="absolute top-full right-4 mt-1 text-red-500 text-sm">
+          {error}
+        </div>
+      )}
     </div>
   );
 }
-
-export default Topbar;

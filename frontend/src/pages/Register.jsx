@@ -5,20 +5,39 @@ import {
     Button,
     Typography,
   } from "@material-tailwind/react";
-  import { useForm } from "react-hook-form";
-  import axios from "axios"
-
+import { useForm } from "react-hook-form";
+import axios from "axios"
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
    
   export function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const onSubmit = async (data) => {
       try {
-        const response = await axios.post("http://localhost:8000/api/v1/admin/register", data, { withCredentials: true });
+        const response = await axios.post("http://localhost:8000/api/v1/admin/register", 
+          data, 
+          { withCredentials: true });
         console.log("Success:", response.data);
+        navigate("/login");
       } catch (error) {
-        console.error("Error:", error.response ? error.response.data : error.message);
+        console.error(
+          "Register error:",
+          error.response ? error.response.data : error.message
+        );
+        // show message from server or fallback
+        const msg =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Invalid credentials";
+        setErrorMessage(msg);
+  
+        // clear after a bit
+        setTimeout(() => setErrorMessage(""), 5000);
       }
     };
 
@@ -87,32 +106,23 @@ import {
               {...register("password")}
             />
           </div>
-          <Checkbox
-            label={
-              <Typography
-                variant="small"
-                color="gray"
-                className="flex items-center font-normal"
-              >
-                I agree the
-                <a
-                  href="#"
-                  className="font-medium transition-colors hover:text-gray-900"
-                >
-                  &nbsp;Terms and Conditions
-                </a>
-              </Typography>
-            }
-            containerProps={{ className: "-ml-2.5" }}
-          />
+          
           <Button className="mt-6" fullWidth type={"submit"}>
             sign up
           </Button>
+
+          {errorMessage && (
+            <Typography color="red" className="mt-4 text-center">
+              {errorMessage}
+            </Typography>
+          )}
+
+
           <Typography color="gray" className="mt-4 text-center font-normal">
             Already have an account?{" "}
-            <a href="#" className="font-medium text-gray-900">
-              Sign In
-            </a>
+            <Link to="/login" className="font-medium text-gray-900">
+              Login
+            </Link>
           </Typography>
         </form>
       </Card>

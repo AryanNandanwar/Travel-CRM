@@ -12,7 +12,7 @@ const cardsData = [
     title: "Today’s Orders",
     value: "11.00",
     icon: <ClipboardListIcon className="h-8 w-8" />,
-    bgColor: "bg-gray-200",
+    bgColor: "bg-red-200",
   },
   {
     title: "Yesterday’s Orders",

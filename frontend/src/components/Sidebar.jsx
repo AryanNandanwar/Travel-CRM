@@ -6,6 +6,7 @@ import {
   UserGroupIcon,
   CogIcon,
 } from "@heroicons/react/outline";
+import { Link } from 'react-router-dom';
 
 
 function Sidebar() {
@@ -18,10 +19,13 @@ function Sidebar() {
         <ul className="space-y-2">
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <HomeIcon className="h-5 w-5 text-gray-600" />
-            <span>Dashboard</span>
+            <span>
+              <Link to="/">Dashboard</Link>
+              </span>
           </li>
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <DocumentTextIcon className="h-5 w-5 text-gray-600" />
+            
             <span>Invoices</span>
           </li>
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
@@ -35,6 +39,15 @@ function Sidebar() {
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <CogIcon className="h-5 w-5 text-gray-600" />
             <span>Settings</span>
+          </li>
+          <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
+            <CogIcon className="h-5 w-5 text-gray-600" />
+           
+              <span> 
+              <Link to="/queries">Queries  </Link>
+              </span>
+           
+            
           </li>
         </ul>
       </nav>

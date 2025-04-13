@@ -16,9 +16,10 @@ const QueryForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="flex justify-center w-screen">
+    <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
-        <h2 className="text-2xl font-bold mb-6">Submit Your Query</h2>
+        <h2 className="flex justify-center text-2xl font-bold mb-6">Submit Your Query</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Client Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -256,6 +257,7 @@ const QueryForm = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };

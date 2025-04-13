@@ -1,9 +1,7 @@
 // App.jsx
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Topbar      from "./components/Topbar";
-import Sidebar     from "./components/Sidebar";
 import Dashboard   from "./pages/Dashboard";
 import QueriesPage from "./pages/QueriesPage";
 import QueryForm   from "./pages/QueryForm";
@@ -22,13 +20,15 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
       </Routes>
     ) : (
-          <div className="flex p-4 flex-1 bg-gray-100">
+          <div className="flex justify-center p-4 flex-1 bg-gray-100">
+
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/queries" element={<QueriesPage />} />
               <Route path="/queryform" element={<QueryForm />} />
             </Routes>
+
           </div>
 
     )

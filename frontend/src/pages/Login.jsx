@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 // accept onLogin prop from App.jsx
-export function Login({ onLogin }) {
+export function Login() {
   const {
     register,
     handleSubmit,

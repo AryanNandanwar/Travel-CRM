@@ -4,10 +4,13 @@ import { SearchIcon } from "@heroicons/react/outline";
 import { Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../AuthContext";
 
 export default function Topbar({ onLogout }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const { logout } = useAuth();
+
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -20,7 +23,7 @@ export default function Topbar({ onLogout }) {
       );
 
       // Tell App to flip isAuthenticated → false
-      onLogout();
+      logout()
 
       // Navigate back to login
       navigate("/", { replace: true });

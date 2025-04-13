@@ -1,6 +1,7 @@
 import React from "react";
 import { CalendarIcon } from "@heroicons/react/outline";
 
+
 // Updated dummy data to include all the fields from your Mongoose schema
 const queries = [
   {

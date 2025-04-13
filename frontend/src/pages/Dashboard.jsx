@@ -2,21 +2,27 @@ import React from "react";
 import CardsRow from "../components/Dashboard/CardsRow"
 import ChartSection from "../components/Dashboard/ChartSection";
 import TablesSection from "../components/Dashboard/TableSection";
-
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 
 function Dashboard() {
   return (
-  
-              <div className="space-y-6">
+    <div className="flex h-screen">
+    <Sidebar />
+      <div className="flex flex-col flex-1">
+        <Topbar />
+          <div className="space-y-6">
                 {/* Cards Row */}
-                <CardsRow />
+            <CardsRow />
 
                 {/* Chart Section */}
-                <ChartSection />
+            <ChartSection />
 
                 {/* Tables Section */}
-                <TablesSection />
-              </div>
+            <TablesSection />
+            </div>
+      </div>
+    </div>
 
   );
 }

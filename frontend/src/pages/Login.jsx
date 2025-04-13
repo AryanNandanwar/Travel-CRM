@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Card,
   Input,
-  Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
@@ -10,6 +9,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 // accept onLogin prop from App.jsx
 export function Login({ onLogin }) {
@@ -20,6 +20,7 @@ export function Login({ onLogin }) {
   } = useForm();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const { login } = useAuth();
 
   const onSubmit = async (data) => {
     try {
@@ -28,15 +29,8 @@ export function Login({ onLogin }) {
         data,
         { withCredentials: true }
       );
-      console.log("Success:", response.data);
-
-      // Axios won't throw for 2xx — so if we're here, it's a 2xx
-      // If your backend returns a flag in the JSON, check it here:
-      // if (!response.data.success) throw new Error(response.data.message);
-
-      // mark as logged in
-      onLogin();
-      // navigate to dashboard
+      
+      login()
       navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error(

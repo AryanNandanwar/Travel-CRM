@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const statusData = [
   { label: "New", count: 43, bgColor: "bg-yellow-500" },
@@ -27,7 +28,7 @@ const StatusCards = () => {
       {/* Add a Query Button */}
       <div className="flex justify-end mb-4">
         <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow">
-          Add a Query
+          <Link to="/queryform">Add a Query</Link>
         </button>
       </div>
     </div>

@@ -1,10 +1,16 @@
 import React from "react";
 import StatusCards from "../components/QueriesPage/StatusCards";
 import QueryTable from "../components/QueriesPage/QueriesTable";
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
 
 
 const QueriesPage = () => {
   return (
+    <div className="flex h-screen">
+    <Sidebar />
+    <div className="flex flex-col flex-1">
+      <Topbar />
 
               <div className="flex min-h-screen bg-gray-100">
                 {/* Sidebar */}
@@ -14,6 +20,9 @@ const QueriesPage = () => {
                     <QueryTable />
                   </div>
               </div>
+
+          </div>
+    </div>
 
 
   );

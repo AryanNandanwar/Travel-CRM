@@ -1,63 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CalendarIcon } from "@heroicons/react/outline";
-
-
-// Updated dummy data to include all the fields from your Mongoose schema
-const queries = [
-  {
-    id: 1,
-    fullName: "John Doe",
-    contactNo: "9999999999",
-    destination: "Bali",
-    NoOfAdults: 2,
-    NoOfChildren: 1,
-    NoOfChildrenBelowFive: 0,
-    TripDuration: "7 Days",
-    StartingPoint: "City A",
-    EndingPoint: "City B",
-    PreferredHotelCategory: "3-Star",
-    Budget: 60000,
-    DateOfInquiry: "2025-03-25",
-    TravelDate: "2025-04-10",
-    status: "New",
-  },
-  {
-    id: 2,
-    fullName: "Jane Smith",
-    contactNo: "8888888888",
-    destination: "Kashmir",
-    NoOfAdults: 2,
-    NoOfChildren: 0,
-    NoOfChildrenBelowFive: 0,
-    TripDuration: "5 Days",
-    StartingPoint: "City C",
-    EndingPoint: "City D",
-    PreferredHotelCategory: "4-Star",
-    Budget: 40000,
-    DateOfInquiry: "2025-03-20",
-    TravelDate: "2025-04-15",
-    status: "In Progress",
-  },
-  {
-    id: 3,
-    fullName: "Michael Brown",
-    contactNo: "7777777777",
-    destination: "Bali",
-    NoOfAdults: 2,
-    NoOfChildren: 2,
-    NoOfChildrenBelowFive: 1,
-    TripDuration: "6 Days",
-    StartingPoint: "City E",
-    EndingPoint: "City F",
-    PreferredHotelCategory: "5-Star",
-    Budget: 50000,
-    DateOfInquiry: "2025-03-18",
-    TravelDate: "2025-04-05",
-    status: "Quotation",
-  },
-];
+import axios from "axios";
 
 const QueryTable = () => {
+  const [queries, setQueries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // For example, you might pass filters along with the request.
+  // Here, we assume no filters are applied.
+  const fetchQueries = async () => {
+    try {
+      // Replace with the correct backend URL and port if different.
+      const response = await axios.get("http://localhost:8000/api/v1/client/get-all-queries", {});
+      
+      // Adjust based on your API response structure.
+      // Here we assume the queries are contained in response.data.data.
+      setQueries(response.data.data);
+      setLoading(false);
+    } catch (err) {
+      setError("Error fetching queries. Please try again later.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQueries();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-md shadow-md p-4">
+        Loading queries...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white rounded-md shadow-md p-4 text-red-600">
+        {error}
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-md shadow-md p-4">
       {/* Filter Row */}
@@ -157,7 +143,7 @@ const QueryTable = () => {
         </thead>
         <tbody>
           {queries.map((query) => (
-            <tr key={query.id} className="border-b hover:bg-gray-50">
+            <tr key={query._id} className="border-b hover:bg-gray-50">
               {/* Inquiry Details */}
               <td className="py-2 px-2 align-top">
                 <p className="text-sm text-gray-700">

@@ -182,9 +182,15 @@ const getClientQueries = asyncHandler(async (req, res) => {
   );
 });
 
+const getAllQueries = asyncHandler(async (req, res) => {
+  const queries = await Query.find({});
+  return res.status(200).json(new ApiResponse(200, queries, "Queries fetched successfully"));
+});
+
 
 export {
     createClientQuery,
     validateClientQuery,
-    getClientQueries
+    getClientQueries,
+    getAllQueries
 }

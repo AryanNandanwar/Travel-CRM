@@ -17,9 +17,11 @@ app.use(cookieParser())
 
 
 import adminRouter from './routes/admin.routes.js'
-console.log("Admin Router Loaded:", adminRouter);
+import clientRouter from './routes/client.routes.js'
 
 
+
+app.use("/api/v1/client", clientRouter)
 app.use("/api/v1/admin", adminRouter)
 
 export {app}

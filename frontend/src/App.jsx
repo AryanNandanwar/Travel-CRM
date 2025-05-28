@@ -8,6 +8,7 @@ import QueryForm   from "./pages/QueryForm";
 import { Login }   from "./pages/Login";
 import { Register } from "./pages/Register";
 import { AuthProvider, useAuth } from "./AuthContext";
+import UpdateForm from "./components/forms/UpdateForm";
 
 
 function AppRoutes() {
@@ -27,6 +28,7 @@ function AppRoutes() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/queries" element={<QueriesPage />} />
               <Route path="/queryform" element={<QueryForm />} />
+              <Route path="/updateform" element={<UpdateForm />} />
             </Routes>
 
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const QueryForm = () => {
+const UpdateForm = () => {
   const {
     register,
     handleSubmit,
@@ -21,14 +21,14 @@ const QueryForm = () => {
     setSuccessMessage("");
     try {
       
-      const response = await axios.post("http://localhost:8000/api/v1/client/create-query", data);
+      const response = await axios.put(`http://localhost:8000/api/v1/client/update-query/${editQuery._id}`, data);
       console.log("Submitted Query:", response.data);
-      setSuccessMessage("Query has been submitted successfully!");
+      setSuccessMessage("Query has been edited successfully!");
       // Clear the form if submission is successful
       reset();
     } catch (error) {
       // Handle error response gracefully
-      console.error("Error submitting the query:", error);
+      console.error("Error updating the query:", error);
       setSubmitError(
         error.response?.data?.message ||
           "An error occurred while submitting your query."
@@ -61,7 +61,22 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="fullName"
-                  {...register("fullName", { required: "Full Name is required" })}
+                  {...register("fullName")}
+                  type="text"
+                  className="border rounded-md w-full px-3 py-2"
+                />
+                {errors.fullName && (
+                  <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="status">
+                  Status
+                </label>
+                <input
+                  id="status"
+                  {...register("status")}
                   type="text"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -93,7 +108,7 @@ const QueryForm = () => {
               </label>
               <input
                 id="destination"
-                {...register("destination", { required: "Destination is required" })}
+                {...register("destination")}
                 type="text"
                 className="border rounded-md w-full px-3 py-2"
               />
@@ -110,10 +125,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="NoOfAdults"
-                  {...register("NoOfAdults", {
-                    required: "This field is required",
-                    valueAsNumber: true,
-                  })}
+                  {...register("NoOfAdults")}
                   type="number"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -127,10 +139,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="NoOfChildren"
-                  {...register("NoOfChildren", {
-                    required: "This field is required",
-                    valueAsNumber: true,
-                  })}
+                  {...register("NoOfChildren")}
                   type="number"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -144,10 +153,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="NoOfChildrenBelowFive"
-                  {...register("NoOfChildrenBelowFive", {
-                    required: "This field is required",
-                    valueAsNumber: true,
-                  })}
+                  {...register("NoOfChildrenBelowFive")}
                   type="number"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -166,7 +172,7 @@ const QueryForm = () => {
               </label>
               <input
                 id="TripDuration"
-                {...register("TripDuration", { required: "Trip Duration is required" })}
+                {...register("TripDuration")}
                 type="text"
                 placeholder="e.g., 7 Days"
                 className="border rounded-md w-full px-3 py-2"
@@ -184,7 +190,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="StartingPoint"
-                  {...register("StartingPoint", { required: "Starting Point is required" })}
+                  {...register("StartingPoint")}
                   type="text"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -198,7 +204,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="EndingPoint"
-                  {...register("EndingPoint", { required: "Ending Point is required" })}
+                  {...register("EndingPoint")}
                   type="text"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -215,9 +221,7 @@ const QueryForm = () => {
               </label>
               <input
                 id="PreferredHotelCategory"
-                {...register("PreferredHotelCategory", {
-                  required: "Preferred Hotel Category is required",
-                })}
+                {...register("PreferredHotelCategory")}
                 type="text"
                 placeholder="e.g., 3-Star, 4-Star, etc."
                 className="border rounded-md w-full px-3 py-2"
@@ -234,10 +238,7 @@ const QueryForm = () => {
               </label>
               <input
                 id="Budget"
-                {...register("Budget", {
-                  required: "Budget is required",
-                  valueAsNumber: true,
-                })}
+                {...register("Budget")}
                 type="number"
                 className="border rounded-md w-full px-3 py-2"
               />
@@ -254,7 +255,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="DateOfInquiry"
-                  {...register("DateOfInquiry", { required: "This field is required" })}
+                  {...register("DateOfInquiry")}
                   type="date"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -268,7 +269,7 @@ const QueryForm = () => {
                 </label>
                 <input
                   id="TravelDate"
-                  {...register("TravelDate", { required: "This field is required" })}
+                  {...register("TravelDate")}
                   type="date"
                   className="border rounded-md w-full px-3 py-2"
                 />
@@ -295,4 +296,4 @@ const QueryForm = () => {
   );
 };
 
-export default QueryForm;
+export default UpdateForm;

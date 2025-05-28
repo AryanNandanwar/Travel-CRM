@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { CalendarIcon } from "@heroicons/react/outline";
+import { CalendarIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const QueryTable = () => {
   const [queries, setQueries] = useState([]);
@@ -21,6 +22,15 @@ const QueryTable = () => {
     } catch (err) {
       setError("Error fetching queries. Please try again later.");
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/v1/client/delete-query/${id}`);
+      setQueries((prev) => prev.filter((q) => q._id !== id));
+    } catch (err) {
+      console.error('Delete failed', err);
     }
   };
 
@@ -139,6 +149,7 @@ const QueryTable = () => {
             <th className="text-left py-2 px-2">Inquiry Details</th>
             <th className="text-left py-2 px-2">Client Details</th>
             <th className="text-left py-2 px-2">Trip Details</th>
+            <th className="text-left py-2 px-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -170,9 +181,9 @@ const QueryTable = () => {
 
               {/* Client Details */}
               <td className="py-2 px-2 align-top">
-                <p className="font-medium text-gray-700">{query.fullName}</p>
+                <p className="font-medium text-gray-500">Name: {query.client.fullName}</p>
                 <p className="text-sm text-gray-500">
-                  Contact: {query.contactNo}
+                  Contact: {query.client.contactNo}
                 </p>
                 <p className="text-sm text-gray-500">
                   Destination: {query.destination}
@@ -204,6 +215,20 @@ const QueryTable = () => {
                   {new Date(query.TravelDate).toLocaleDateString()}
                 </p>
               </td>
+
+              {/* Actions */}
+                <td className="py-2 px-2 align-top flex gap-3">
+                  <Link to="/updateform">
+                    <PencilAltIcon
+                    className="h-5 w-5 text-blue-500 cursor-pointer"
+                  />
+                  </Link>
+                  <TrashIcon
+                    className="h-5 w-5 text-red-500 cursor-pointer"
+                    onClick={() => handleDelete(query._id)}
+                  />
+                </td>
+
             </tr>
           ))}
         </tbody>

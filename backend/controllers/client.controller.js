@@ -118,6 +118,7 @@ const createClientQuery = asyncHandler(async (req, res) => {
 
     // Create and save the new query document.
     const newQuery = new Query({
+      client: client._id,
       destination,
       NoOfAdults,
       NoOfChildren,
@@ -183,8 +184,80 @@ const getClientQueries = asyncHandler(async (req, res) => {
 });
 
 const getAllQueries = asyncHandler(async (req, res) => {
-  const queries = await Query.find({});
+  const queries = await Query.find({}).populate("client", "fullName contactNo")
+  .lean();
   return res.status(200).json(new ApiResponse(200, queries, "Queries fetched successfully"));
+});
+
+const updateClientQueries = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new ApiError(400, errors.array().map(e => e.msg).join(", "));
+  }
+
+  const { queryId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(queryId)) {
+    throw new ApiError(400, "Invalid queryId");
+  }
+
+  // Fields you allow updating on Query vs. Client
+  const queryAllowed  = ["destination","NoOfAdults","NoOfChildren","NoOfChildrenBelowFive",
+                         "TripDuration","StartingPoint","EndingPoint",
+                         "PreferredHotelCategory","Budget","DateOfInquiry","TravelDate","status"];
+  const clientAllowed = ["fullName","contactNo"];
+
+  // Split incoming body into two update objects
+  const queryUpdates  = {};
+  const clientUpdates = {};
+  Object.entries(req.body).forEach(([key, val]) => {
+    if (queryAllowed.includes(key))  queryUpdates[key]  = val;
+    if (clientAllowed.includes(key)) clientUpdates[key] = val;
+  });
+
+  if (!Object.keys(queryUpdates).length && !Object.keys(clientUpdates).length) {
+    throw new ApiError(400, "No valid fields provided for update");
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 1) Update the Query itself
+    const queryDoc = await Query.findById(queryId).session(session);
+    if (!queryDoc) throw new ApiError(404, "Query not found");
+
+    if (Object.keys(queryUpdates).length) {
+      await Query.findByIdAndUpdate(
+        queryId,
+        { $set: queryUpdates },
+        { new: true, runValidators: true, session }
+      );
+    }
+
+    // 2) Update its Client
+    if (Object.keys(clientUpdates).length) {
+      await Client.findByIdAndUpdate(
+        queryDoc.client,
+        { $set: clientUpdates },
+        { new: true, runValidators: true, session }
+      );
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    // 3) Return the refreshed Query with populated client
+    const updated = await Query.findById(queryId)
+      .populate("client", "fullName contactNo")
+      .lean();
+    res
+      .status(200)
+      .json(new ApiResponse(200, updated, "Query and client updated successfully"));
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new ApiError(500, err.message);
+  }
 });
 
 
@@ -192,5 +265,7 @@ export {
     createClientQuery,
     validateClientQuery,
     getClientQueries,
-    getAllQueries
+    getAllQueries,
+    updateClientQueries
 }
+

@@ -2,6 +2,11 @@ import mongoose, {Schema} from "mongoose";
 
 const querySchema = new Schema(
     {
+        client: {
+            type: Schema.Types.ObjectId,
+            ref: 'Client',
+            required: true,
+          },
         destination: {
             type: String,
             required: true,
@@ -53,6 +58,10 @@ const querySchema = new Schema(
             type: Date,
             required: true,
         },
+        status: {
+            type: String,
+            default: "New",
+        }
 
     },
     {

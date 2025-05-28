@@ -161,26 +161,27 @@ const createClientQuery = asyncHandler(async (req, res) => {
   }
 });
 
-const getClientQueries = asyncHandler(async (req, res) => {
-  const { fullName, contactNo } = req.body;
+const getClientQueryById = asyncHandler(async (req, res) => {
+  const { queryId } = req.params;
 
-  // Ensure both fields are provided
-  if (!fullName || !contactNo) {
-    throw new ApiError(400, "Both fullName and contactNo are required.");
+  // 1) Validate the param
+  if (!mongoose.Types.ObjectId.isValid(queryId)) {
+    throw new ApiError(400, "Invalid queryId");
   }
 
-  // Find the client document and populate the queries field
-  const client = await Client.findOne({ fullName, contactNo }).populate("query");
+  // 2) Lookup the Query and populate its client
+  const query = await Query.findById(queryId)
+    .populate("client", "fullName contactNo")
+    .lean();
 
-  // If no client is found, return a 404
-  if (!client) {
-    throw new ApiError(404, "Client not found.");
+  if (!query) {
+    throw new ApiError(404, "Query not found");
   }
 
-  // Return the client's queries array
-  return res.status(200).json(
-    new ApiResponse(200, client.query, "Client queries retrieved successfully")
-  );
+  // 3) Return the populated Query
+  return res
+    .status(200)
+    .json(new ApiResponse(200, query, "Query fetched successfully"));
 });
 
 const getAllQueries = asyncHandler(async (req, res) => {
@@ -260,12 +261,41 @@ const updateClientQueries = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteClientQuery = asyncHandler(async (req, res) => {
+  const { queryId } = req.params;
+
+  // Validate queryId
+  if (!mongoose.Types.ObjectId.isValid(queryId)) {
+    throw new ApiError(400, "Invalid queryId");
+  }
+
+  // Find the query to delete
+  const query = await Query.findById(queryId);
+  if (!query) {
+    throw new ApiError(404, "Query not found");
+  }
+
+  // Remove the queryId from the client's query array
+  await Client.updateOne(
+    { _id: query.client },
+    { $pull: { query: queryId } }
+  );
+
+  // Delete the query document
+  await Query.findByIdAndDelete(queryId);
+
+  return res.status(200).json(
+    new ApiResponse(200, null, "Query deleted successfully")
+  );
+});
+
 
 export {
     createClientQuery,
     validateClientQuery,
-    getClientQueries,
+    getClientQueryById,
     getAllQueries,
-    updateClientQueries
+    updateClientQueries,
+    deleteClientQuery
 }
 

@@ -1,294 +1,222 @@
-import React, { useState } from "react";
+// src/components/UpdateForm.jsx
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdateForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({
+    defaultValues: {}
+  });
 
-  // Optional: For managing loading and error states
   const [loading, setLoading] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const onSubmit = async (data) => {
+  // Fetch existing data
+  useEffect(() => {
+    const fetchQuery = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8000/api/v1/client/get-query/${id}`
+        );
+        reset(data.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load query.");
+      }
+    };
+    fetchQuery();
+  }, [id, reset]);
+
+  const onSubmit = async (formData) => {
     setLoading(true);
-    setSubmitError("");
+    setError("");
     setSuccessMessage("");
     try {
-      
-      const response = await axios.put(`http://localhost:8000/api/v1/client/update-query/${editQuery._id}`, data);
-      console.log("Submitted Query:", response.data);
-      setSuccessMessage("Query has been edited successfully!");
-      // Clear the form if submission is successful
-      reset();
-    } catch (error) {
-      // Handle error response gracefully
-      console.error("Error updating the query:", error);
-      setSubmitError(
-        error.response?.data?.message ||
-          "An error occurred while submitting your query."
+      await axios.put(
+        `http://localhost:8000/api/v1/client/update-query/${id}`,
+        formData
       );
+      setSuccessMessage("Form submitted successfully.");
+      // Optionally navigate back after a delay
+      // setTimeout(() => navigate("/queries"), 1500);
+    } catch (err) {
+      console.error(err);
+      setError("Update failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="flex justify-center w-screen">
       <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
-          <h2 className="flex justify-center text-2xl font-bold mb-6">
-            Submit Your Query
-          </h2>
-
-          {submitError && (
-            <div className="mb-4 text-red-600 text-center">{submitError}</div>
-          )}
-          {successMessage && (
-            <div className="mb-4 text-green-600 text-center">{successMessage}</div>
-          )}
-
+          <h1 className="flex justify-center text-2xl font-bold mb-6">Update Query</h1>
+          {error && <p className="text-red-600 mb-2">{error}</p>}
+          {successMessage && <p className="text-green-600 mb-4">{successMessage}</p>}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Client Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="fullName">
-                  Full Name
-                </label>
-                <input
-                  id="fullName"
-                  {...register("fullName")}
-                  type="text"
-                  className="border rounded-md w-full px-3 py-2"
-                />
-                {errors.fullName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="status">
-                  Status
-                </label>
-                <input
-                  id="status"
-                  {...register("status")}
-                  type="text"
-                  className="border rounded-md w-full px-3 py-2"
-                />
-                {errors.fullName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="contactNo">
-                  Contact Number
-                </label>
-                <input
-                  id="contactNo"
-                  {...register("contactNo", { required: "Contact number is required" })}
-                  type="text"
-                  className="border rounded-md w-full px-3 py-2"
-                />
-                {errors.contactNo && (
-                  <p className="text-red-500 text-xs mt-1">{errors.contactNo.message}</p>
-                )}
-              </div>
+            <div>
+              <label htmlFor="fullName">Full Name</label>
+              <input
+                id="fullName"
+                {...register("client.fullName")}
+                className="w-full border px-3 py-2"
+              />
             </div>
 
-            {/* Destination */}
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="destination">
-                Destination
-              </label>
+              <label htmlFor="contactNo">Contact No</label>
+              <input
+                id="contactNo"
+                {...register("client.contactNo")}
+                className="w-full border px-3 py-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="destination">Destination</label>
               <input
                 id="destination"
                 {...register("destination")}
-                type="text"
-                className="border rounded-md w-full px-3 py-2"
+                className="w-full border px-3 py-2"
               />
-              {errors.destination && (
-                <p className="text-red-500 text-xs mt-1">{errors.destination.message}</p>
-              )}
             </div>
 
-            {/* Trip Details */}
+            <div>
+              <label htmlFor="status">Status</label>
+              <input
+                id="status"
+                {...register("status")}
+                type="text"
+                className="w-full border px-3 py-2"
+                placeholder="e.g., New, In Progress, Quotation"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="NoOfAdults">
-                  Number of Adults
-                </label>
+                <label htmlFor="NoOfAdults">Number of Adults</label>
                 <input
                   id="NoOfAdults"
                   {...register("NoOfAdults")}
                   type="number"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.NoOfAdults && (
-                  <p className="text-red-500 text-xs mt-1">{errors.NoOfAdults.message}</p>
-                )}
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="NoOfChildren">
-                  Number of Children
-                </label>
+                <label htmlFor="NoOfChildren">Number of Children</label>
                 <input
                   id="NoOfChildren"
                   {...register("NoOfChildren")}
                   type="number"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.NoOfChildren && (
-                  <p className="text-red-500 text-xs mt-1">{errors.NoOfChildren.message}</p>
-                )}
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="NoOfChildrenBelowFive">
-                  Children Below 5
-                </label>
+                <label htmlFor="NoOfChildrenBelowFive">Children Below 5</label>
                 <input
                   id="NoOfChildrenBelowFive"
                   {...register("NoOfChildrenBelowFive")}
                   type="number"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.NoOfChildrenBelowFive && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.NoOfChildrenBelowFive.message}
-                  </p>
-                )}
               </div>
             </div>
 
-            {/* Trip Duration */}
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="TripDuration">
-                Trip Duration
-              </label>
+              <label htmlFor="TripDuration">Trip Duration</label>
               <input
                 id="TripDuration"
                 {...register("TripDuration")}
                 type="text"
                 placeholder="e.g., 7 Days"
-                className="border rounded-md w-full px-3 py-2"
+                className="w-full border px-3 py-2"
               />
-              {errors.TripDuration && (
-                <p className="text-red-500 text-xs mt-1">{errors.TripDuration.message}</p>
-              )}
             </div>
 
-            {/* Route */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="StartingPoint">
-                  Starting Point
-                </label>
+                <label htmlFor="StartingPoint">Starting Point</label>
                 <input
                   id="StartingPoint"
                   {...register("StartingPoint")}
                   type="text"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.StartingPoint && (
-                  <p className="text-red-500 text-xs mt-1">{errors.StartingPoint.message}</p>
-                )}
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="EndingPoint">
-                  Ending Point
-                </label>
+                <label htmlFor="EndingPoint">Ending Point</label>
                 <input
                   id="EndingPoint"
                   {...register("EndingPoint")}
                   type="text"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.EndingPoint && (
-                  <p className="text-red-500 text-xs mt-1">{errors.EndingPoint.message}</p>
-                )}
               </div>
             </div>
 
-            {/* Preferred Hotel Category */}
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="PreferredHotelCategory">
-                Preferred Hotel Category
-              </label>
+              <label htmlFor="PreferredHotelCategory">Preferred Hotel Category</label>
               <input
                 id="PreferredHotelCategory"
                 {...register("PreferredHotelCategory")}
                 type="text"
                 placeholder="e.g., 3-Star, 4-Star, etc."
-                className="border rounded-md w-full px-3 py-2"
+                className="w-full border px-3 py-2"
               />
-              {errors.PreferredHotelCategory && (
-                <p className="text-red-500 text-xs mt-1">{errors.PreferredHotelCategory.message}</p>
-              )}
             </div>
 
-            {/* Budget */}
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="Budget">
-                Budget (₹)
-              </label>
+              <label htmlFor="Budget">Budget (₹)</label>
               <input
                 id="Budget"
                 {...register("Budget")}
                 type="number"
-                className="border rounded-md w-full px-3 py-2"
+                className="w-full border px-3 py-2"
               />
-              {errors.Budget && (
-                <p className="text-red-500 text-xs mt-1">{errors.Budget.message}</p>
-              )}
             </div>
 
-            {/* Dates */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="DateOfInquiry">
-                  Date of Inquiry
-                </label>
+                <label htmlFor="DateOfInquiry">Date of Inquiry</label>
                 <input
                   id="DateOfInquiry"
                   {...register("DateOfInquiry")}
                   type="date"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.DateOfInquiry && (
-                  <p className="text-red-500 text-xs mt-1">{errors.DateOfInquiry.message}</p>
-                )}
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="TravelDate">
-                  Travel Date
-                </label>
+                <label htmlFor="TravelDate">Travel Date</label>
                 <input
                   id="TravelDate"
                   {...register("TravelDate")}
                   type="date"
-                  className="border rounded-md w-full px-3 py-2"
+                  className="w-full border px-3 py-2"
                 />
-                {errors.TravelDate && (
-                  <p className="text-red-500 text-xs mt-1">{errors.TravelDate.message}</p>
-                )}
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md"
-              >
-                {loading ? "Submitting..." : "Submit Query"}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              {loading ? "Updating..." : "Update"}
+            </button>
           </form>
         </div>
       </div>

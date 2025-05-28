@@ -28,7 +28,7 @@ function AppRoutes() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/queries" element={<QueriesPage />} />
               <Route path="/queryform" element={<QueryForm />} />
-              <Route path="/updateform" element={<UpdateForm />} />
+              <Route path="/updateform/:id" element={<UpdateForm />} />
             </Routes>
 
           </div>

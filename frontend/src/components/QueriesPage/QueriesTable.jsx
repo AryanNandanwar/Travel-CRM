@@ -218,7 +218,7 @@ const QueryTable = () => {
 
               {/* Actions */}
                 <td className="py-2 px-2 align-top flex gap-3">
-                  <Link to="/updateform">
+                  <Link to={`/updateform/${query._id}`}>
                     <PencilAltIcon
                     className="h-5 w-5 text-blue-500 cursor-pointer"
                   />

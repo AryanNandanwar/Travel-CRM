@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CalendarIcon, PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
+import { CalendarIcon, PencilAltIcon, TrashIcon, DocumentAddIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -227,6 +227,12 @@ const QueryTable = () => {
                     className="h-5 w-5 text-red-500 cursor-pointer"
                     onClick={() => handleDelete(query._id)}
                   />
+                  <Link to={`/follow-up/${query._id}`}>
+                    <DocumentAddIcon
+                    className="h-5 w-5 text-blue-500 cursor-pointer"
+                  />
+                  </Link>
+                  
                 </td>
 
             </tr>

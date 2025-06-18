@@ -9,6 +9,7 @@ import { Login }   from "./pages/Login";
 import { Register } from "./pages/Register";
 import { AuthProvider, useAuth } from "./AuthContext";
 import UpdateForm from "./components/forms/UpdateForm";
+import FollowUpPage from "./pages/FollowUpPage";
 
 
 function AppRoutes() {
@@ -29,6 +30,7 @@ function AppRoutes() {
               <Route path="/queries" element={<QueriesPage />} />
               <Route path="/queryform" element={<QueryForm />} />
               <Route path="/updateform/:id" element={<UpdateForm />} />
+              <Route path="/follow-up/:id" element={<FollowUpPage/>} />
             </Routes>
 
           </div>

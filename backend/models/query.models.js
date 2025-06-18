@@ -6,7 +6,11 @@ const querySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Client',
             required: true,
-          },
+        },
+        followup:[{
+            type: Schema.Types.ObjectId,
+            ref: 'FollowUp'  
+        }],
         destination: {
             type: String,
             required: true,

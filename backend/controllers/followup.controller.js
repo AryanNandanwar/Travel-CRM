@@ -84,7 +84,72 @@ const addFollowUp = asyncHandler(async (req, res) => {
   }
 });
 
+const updateFollowUp = asyncHandler(async(req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new ApiError(400, "Invalid Id");
+    }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new ApiError(400, errors.array().map(e => e.msg).join(', '));
+  }
+
+  const { content, status, type, date } = req.body;
+
+  // 3) Find and update
+  const followUp = await FollowUp.findById(id);
+  if (!followUp) {
+    throw new ApiError(404, 'Follow‑up not found');
+  }
+
+  // Only overwrite if provided
+  if (content !== undefined) followUp.content = content;
+  if (status  !== undefined) followUp.status  = status;
+  if (type    !== undefined) followUp.type    = type;
+  if (date    !== undefined) followUp.date    = date;
+
+  await followUp.save();
+
+  // 4) Return updated document
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, followUp, 'Follow‑up updated successfully')
+    );
+
+})
+
+const deleteFollowUp = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // 1) Validate ID
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(400, 'Invalid follow‑up ID');
+  }
+
+  // 2) Remove the follow‑up document
+  const deleted = await FollowUp.findByIdAndDelete(id);
+  if (!deleted) {
+    throw new ApiError(404, 'Follow‑up not found');
+  }
+
+  // 3) Pull its reference from any Query.followups arrays
+  await Query.updateMany(
+    { followups: id },
+    { $pull: { followups: id } }
+  );
+
+  // 4) Return success
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, 'Follow‑up deleted successfully'));
+});
+
 export {
     addFollowUp,
-    getFollowUps
+    getFollowUps,
+    updateFollowUp,
+    deleteFollowUp
 }

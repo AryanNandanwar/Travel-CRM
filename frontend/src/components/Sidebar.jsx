@@ -40,7 +40,7 @@ function Sidebar() {
 
 
   return (
-    <div className="w-64 bg-white shadow-md flex flex-col">
+    <div className="w-64 bg-white shadow-md flex flex-col h-screen fixed left-0 top-0 bottom-0">
       <div className="p-4 border-b">
         <h1 className="text-2xl font-bold text-blue-600">Travel Dhamaal Holidays</h1>
       </div>

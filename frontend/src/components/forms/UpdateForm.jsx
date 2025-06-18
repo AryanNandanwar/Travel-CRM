@@ -57,10 +57,9 @@ const UpdateForm = () => {
   };
 
   return (
-    <div className="flex justify-center w-screen">
-      <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+    
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
-          <h1 className="flex justify-center text-2xl font-bold mb-6">Update Query</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center">Update Query</h1>
           {error && <p className="text-red-600 mb-2">{error}</p>}
           {successMessage && <p className="text-green-600 mb-4">{successMessage}</p>}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -219,8 +218,7 @@ const UpdateForm = () => {
             </button>
           </form>
         </div>
-      </div>
-    </div>
+
   );
 };
 

@@ -38,8 +38,7 @@ const QueryForm = () => {
   };
 
   return (
-    <div className="flex justify-center w-screen">
-      <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
+   
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
           <h2 className="flex justify-center text-2xl font-bold mb-6">
             Submit Your Query
@@ -290,8 +289,7 @@ const QueryForm = () => {
             </div>
           </form>
         </div>
-      </div>
-    </div>
+
   );
 };
 

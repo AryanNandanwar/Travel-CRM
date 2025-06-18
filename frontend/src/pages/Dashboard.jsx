@@ -7,12 +7,8 @@ import Topbar from "../components/Topbar";
 
 function Dashboard() {
   return (
-    <div className="flex h-screen">
-    <Sidebar />
-      <div className="flex flex-col flex-1">
-
-          <div className="space-y-6">
-                {/* Cards Row */}
+    <div>
+    
             <CardsRow />
 
                 {/* Chart Section */}
@@ -21,8 +17,7 @@ function Dashboard() {
                 {/* Tables Section */}
             <TablesSection />
             </div>
-      </div>
-    </div>
+
 
   );
 }

@@ -1,31 +1,13 @@
+// src/pages/QueriesPage.jsx
 import React from "react";
 import StatusCards from "../components/QueriesPage/StatusCards";
 import QueryTable from "../components/QueriesPage/QueriesTable";
-import Sidebar from "../components/Sidebar";
-import Topbar from "../components/Topbar";
 
-
-const QueriesPage = () => {
+export default function QueriesPage() {
   return (
-    <div className="flex h-screen">
-    <Sidebar />
-    <div className="flex flex-col flex-1">
-      {/* <Topbar /> */}
-
-              <div className="flex min-h-screen bg-gray-100">
-                {/* Sidebar */}
-
-                  <div className="p-4 space-y-4">
-                    <StatusCards />
-                    <QueryTable />
-                  </div>
-              </div>
-
-          </div>
-    </div>
-
-
+    <>
+      <StatusCards />
+      <QueryTable />
+    </>
   );
-};
-
-export default QueriesPage;
+}

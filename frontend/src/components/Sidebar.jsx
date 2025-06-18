@@ -7,9 +7,38 @@ import {
   CogIcon,
 } from "@heroicons/react/outline";
 import { Link } from 'react-router-dom';
-
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 function Sidebar() {
+  const { logout } = useAuth()
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      // Call your backend logout endpoint, sending cookies
+      await axios.post(
+        "http://localhost:8000/api/v1/admin/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      // Tell App to flip isAuthenticated → false
+      logout()
+
+      // Navigate back to login
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setError("Could not log out. Please try again.");
+    }
+  };
+
+
   return (
     <div className="w-64 bg-white shadow-md flex flex-col">
       <div className="p-4 border-b">
@@ -24,6 +53,15 @@ function Sidebar() {
               </span>
           </li>
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
+            <CogIcon className="h-5 w-5 text-gray-600" />
+           
+              <span> 
+              <Link to="/queries">Queries  </Link>
+              </span>
+           
+            
+          </li>
+          <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <DocumentTextIcon className="h-5 w-5 text-gray-600" />
             
             <span>Invoices</span>
@@ -36,19 +74,13 @@ function Sidebar() {
             <UserGroupIcon className="h-5 w-5 text-gray-600" />
             <span>Customers</span>
           </li>
-          <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
+          <li 
+          onClick={handleLogout}
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <CogIcon className="h-5 w-5 text-gray-600" />
-            <span>Settings</span>
+            <span>Logout</span>
           </li>
-          <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
-            <CogIcon className="h-5 w-5 text-gray-600" />
-           
-              <span> 
-              <Link to="/queries">Queries  </Link>
-              </span>
-           
-            
-          </li>
+
         </ul>
       </nav>
     </div>

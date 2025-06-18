@@ -10,7 +10,7 @@ const QueriesPage = () => {
     <div className="flex h-screen">
     <Sidebar />
     <div className="flex flex-col flex-1">
-      <Topbar />
+      {/* <Topbar /> */}
 
               <div className="flex min-h-screen bg-gray-100">
                 {/* Sidebar */}

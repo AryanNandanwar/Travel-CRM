@@ -10,7 +10,7 @@ function Dashboard() {
     <div className="flex h-screen">
     <Sidebar />
       <div className="flex flex-col flex-1">
-        <Topbar />
+
           <div className="space-y-6">
                 {/* Cards Row */}
             <CardsRow />

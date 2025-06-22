@@ -86,7 +86,7 @@ const QueryTable = () => {
         </div>
         <div className="flex items-center gap-2">
           <label htmlFor="queryId" className="text-sm font-medium">
-            QueryId
+            Name
           </label>
           <input
             type="text"
@@ -97,12 +97,12 @@ const QueryTable = () => {
         </div>
         <div className="flex items-center gap-2">
           <label htmlFor="subject" className="text-sm font-medium">
-            Subject
+            Destination
           </label>
           <input
             type="text"
-            id="subject"
-            placeholder="Subject"
+            id="destination"
+            placeholder="Destination"
             className="border rounded-md px-3 py-1 text-sm"
           />
         </div>
@@ -123,20 +123,7 @@ const QueryTable = () => {
             <option value="Lost">Lost</option>
           </select>
         </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="ops" className="text-sm font-medium">
-            Select OPS
-          </label>
-          <select
-            id="ops"
-            className="border rounded-md px-3 py-1 text-sm bg-white"
-          >
-            <option value="">All OPS</option>
-            <option value="ops1">Ops 1</option>
-            <option value="ops2">Ops 2</option>
-            {/* Add more OPS as needed */}
-          </select>
-        </div>
+
         <button className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 text-sm">
           Search
         </button>

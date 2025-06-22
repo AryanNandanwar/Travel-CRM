@@ -72,7 +72,7 @@ function Sidebar() {
           </li>
           <li className="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
             <UserGroupIcon className="h-5 w-5 text-gray-600" />
-            <span>Customers</span>
+            <span>Clients</span>
           </li>
           <li 
           onClick={handleLogout}

@@ -26,11 +26,11 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = asyncHandler( async (req, res) => {
    
 
-    const {fullName, email, ContactNo, password } = req.body
+    const {fullName, email, ContactNo, password, role } = req.body
     //console.log("email: ", email);
 
     if (
-        [fullName, email, ContactNo, password].some((field) => field?.trim() === "")
+        [fullName, email, ContactNo, password, role].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -50,7 +50,7 @@ const registerUser = asyncHandler( async (req, res) => {
         ContactNo,
         email, 
         password,
-
+        role
     })
 
     const createdUser = await Admin.findById(user._id).select(
@@ -247,6 +247,70 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200, user, "Account details updated successfully"))
 });
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await Admin.find()
+    .select("-password -refreshToken")
+    .lean();
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Users fetched successfully"));
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+  const user = await Admin.findById(userId)
+    .select("-password -refreshToken");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User fetched successfully"));
+});
+
+const updateUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const { fullName, email, role } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+
+
+  const updated = await Admin.findByIdAndUpdate(
+    userId,
+    { fullName: fullName.trim(), email: email.trim(), role },
+    { new: true, runValidators: true }
+  ).select("-password -refreshToken");
+
+  if (!updated) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updated, "User updated successfully"));
+});
+
+const deleteUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+
+  const deleted = await Admin.findByIdAndDelete(userId);
+  if (!deleted) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "User deleted successfully"));
+});
+
 export {
     registerUser,
     loginUser,
@@ -254,5 +318,9 @@ export {
     refreshAccessToken,
     changeCurrentPassword,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    getAllUsers,
+    getUserById,
+    updateUserById,
+    deleteUserById
 }

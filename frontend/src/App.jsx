@@ -15,7 +15,7 @@ import FollowUpPage from "./pages/FollowUpPage";
 import { Login }    from "./pages/Login";
 import { Register } from "./pages/Register";
 import UsersPage from "./pages/Users";
-
+import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider, useAuth } from "./AuthContext";
 import AppLayout    from "./components/AppLayout";
 
@@ -45,7 +45,14 @@ function AppRoutes() {
         <Route path="/queryform"  element={<QueryForm />} />
         <Route path="/updateform/:id" element={<UpdateForm />} />
         <Route path="/follow-up/:id" element={<FollowUpPage />} />
-        <Route path="/users-page"    element={<UsersPage />} />
+        <Route
+          path="/users-page"
+          element={
+            <RequireAdmin>
+              <UsersPage />
+            </RequireAdmin>
+          }
+        />
       </Route>
     </Routes>
   );

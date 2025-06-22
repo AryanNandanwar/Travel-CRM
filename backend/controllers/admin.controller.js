@@ -279,10 +279,39 @@ const updateUserById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid user ID");
   }
 
+  const updates = {};
 
-  const updated = await Admin.findByIdAndUpdate(
+  // If fullName is provided, it must be a non-empty string
+  if (req.body.fullName !== undefined) {
+    if (typeof fullName !== 'string' || !fullName.trim()) {
+      throw new ApiError(400, "fullName, if provided, must be a non-empty string");
+    }
+    updates.fullName = fullName.trim();
+  }
+
+  // If email is provided, it must be a non-empty string
+  if (req.body.email !== undefined) {
+    if (typeof email !== 'string' || !email.trim()) {
+      throw new ApiError(400, "email, if provided, must be a non-empty string");
+    }
+    updates.email = email.trim();
+  }
+
+  // If role is provided, it must be either 'admin' or 'user'
+  if (req.body.role !== undefined) {
+    if (!['admin','user'].includes(role)) {
+      throw new ApiError(400, "role, if provided, must be 'admin' or 'user'");
+    }
+    updates.role = role;
+  }
+
+  if (Object.keys(updates).length === 0) {
+    throw new ApiError(400, "At least one of fullName, email or role must be provided");
+  }
+
+const updated = await Admin.findByIdAndUpdate(
     userId,
-    { fullName: fullName.trim(), email: email.trim(), role },
+    { $set: updates },
     { new: true, runValidators: true }
   ).select("-password -refreshToken");
 

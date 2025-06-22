@@ -14,6 +14,7 @@ import UpdateForm   from "./components/forms/UpdateForm";
 import FollowUpPage from "./pages/FollowUpPage";
 import { Login }    from "./pages/Login";
 import { Register } from "./pages/Register";
+import UsersPage from "./pages/Users";
 
 import { AuthProvider, useAuth } from "./AuthContext";
 import AppLayout    from "./components/AppLayout";
@@ -39,11 +40,12 @@ function AppRoutes() {
         <Route index element={<Navigate to="/dashboard" replace />} />
 
         {/* actual pages */}
-        <Route path="dashboard"  element={<Dashboard />} />
-        <Route path="queries"    element={<QueriesPage />} />
-        <Route path="queryform"  element={<QueryForm />} />
-        <Route path="updateform/:id" element={<UpdateForm />} />
-        <Route path="follow-up/:id" element={<FollowUpPage />} />
+        <Route path="/dashboard"  element={<Dashboard />} />
+        <Route path="/queries"    element={<QueriesPage />} />
+        <Route path="/queryform"  element={<QueryForm />} />
+        <Route path="/updateform/:id" element={<UpdateForm />} />
+        <Route path="/follow-up/:id" element={<FollowUpPage />} />
+        <Route path="/users-page"    element={<UsersPage />} />
       </Route>
     </Routes>
   );

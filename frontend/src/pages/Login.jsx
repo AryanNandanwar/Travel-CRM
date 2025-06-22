@@ -8,7 +8,6 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 // accept onLogin prop from App.jsx
@@ -30,7 +29,10 @@ export function Login() {
         { withCredentials: true }
       );
       
-      login()
+      login({
+        user: response.data.data.user,
+        accessToken: response.data.data.accessToken
+      })
       navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error(
@@ -105,12 +107,7 @@ export function Login() {
             </Typography>
           )}
 
-          <Typography color="gray" className="mt-4 text-center font-normal">
-            Don't have an account?{" "}
-            <Link to="/register" className="font-medium text-gray-900">
-              Register
-            </Link>
-          </Typography>
+          
         </form>
       </Card>
     </div>

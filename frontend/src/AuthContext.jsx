@@ -1,19 +1,34 @@
-import { createContext, useContext, useState } from "react";
+// src/AuthContext.jsx
+import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
-
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  const login = ({ user: userInfo, accessToken }) => {
+    setUser(userInfo);
+    // optionally store accessToken if you need it
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  const isAuthenticated = Boolean(user);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      login,
+      logout,
+      isAuthenticated        // ← expose this
+    }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}

@@ -144,6 +144,7 @@ const QueryTable = () => {
             <tr key={query._id} className="border-b hover:bg-gray-50">
               {/* Inquiry Details */}
               <td className="py-2 px-2 align-top">
+                
                 <p className="text-sm text-gray-700">
                   <strong>Status:</strong>{" "}
                   <span
@@ -160,10 +161,17 @@ const QueryTable = () => {
                     {query.status}
                   </span>
                 </p>
+                <p className="text-sm text-gray-700">
+                
+                  Trip ID:
+                  {query.trip_id}
+                </p>
                 <p className="text-xs text-gray-500">
                   Inquiry Date:{" "}
                   {new Date(query.DateOfInquiry).toLocaleDateString()}
                 </p>
+                
+
               </td>
 
               {/* Client Details */}

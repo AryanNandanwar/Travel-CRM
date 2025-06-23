@@ -65,7 +65,12 @@ const querySchema = new Schema(
         status: {
             type: String,
             default: "New",
+        },
+        trip_id: {
+            type: Number,
+            unique: true,
         }
+        
 
     },
     {

@@ -96,6 +96,7 @@ const createClientQuery = asyncHandler(async (req, res) => {
     Budget,
     DateOfInquiry,
     TravelDate,
+    trip_id
   } = req.body;
 
   // Start a Mongoose session for transaction
@@ -130,6 +131,7 @@ const createClientQuery = asyncHandler(async (req, res) => {
       Budget,
       DateOfInquiry,
       TravelDate,
+      trip_id
     });
     await newQuery.save({ session });
 

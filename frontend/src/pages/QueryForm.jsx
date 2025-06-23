@@ -52,6 +52,25 @@ const QueryForm = () => {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+            {/* Trip ID */}
+            <div>
+              <label
+                className="block text-sm font-medium mb-1"
+                htmlFor="trip_id"
+              >
+                Trip ID
+              </label>
+              <input
+                id="trip_id"
+                {...register("trip_id", { required: "Trip ID is required." })}
+                type="text"
+                className="border rounded-md w-full px-3 py-2"
+              />
+              {errors.trip_id && (
+                <p className="text-red-500 text-xs mt-1">{errors.trip_id.message}</p>
+              )}
+            </div>
             {/* Client Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

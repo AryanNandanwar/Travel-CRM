@@ -73,10 +73,7 @@ npm start
 
 ---
 
-## 📷 Screenshots
-*(Add screenshots of dashboard, booking page, etc.)*
 
----
 
 ## 🔮 Future Enhancements
 - AI-powered lead scoring
